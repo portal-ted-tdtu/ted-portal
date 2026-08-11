@@ -1,17 +1,17 @@
 // ./app/router.js
 
-import { authRouter } from "../modules/auth/auth.router.js";
-// import { userRouter } from "../modules/users/user.router.js";
-// import { eventRouter } from "../modules/events/event.router.js";
+import { authRouter } from "../modules/auth/routers/authRouter.js";
+// import { userRouter } from "../modules/users/userRouter.js";
+// import { eventRouter } from "../modules/events/eventRouter.js";
 
-// import { departmentRouter } from "../modules/departments/department.router.js";
-// import { facultyRouter } from "../modules/faculties/faculty.router.js";
-// import { generationRouter } from "../modules/generations/generation.router.js";
-// import { roleRouter } from "../modules/roles/role.router.js";
-// import { mistakeRouter } from "../modules/mistakes/mistake.router.js";
-// import { schoolYearRouter } from "../modules/schoolYears/schoolYear.router.js";
-// import { eventTypeRouter } from "../modules/eventTypes/eventType.router.js";
-// import { eventStatusRouter } from "../modules/eventStatus/eventStatus.router.js";
+// import { departmentRouter } from "../modules/departments/departmentRouter.js";
+// import { facultyRouter } from "../modules/faculties/facultyRouter.js";
+// import { generationRouter } from "../modules/generations/generationRouter.js";
+// import { roleRouter } from "../modules/roles/roleRouter.js";
+// import { mistakeRouter } from "../modules/mistakes/mistakeRouter.js";
+// import { schoolYearRouter } from "../modules/schoolYears/schoolYearRouter.js";
+// import { eventTypeRouter } from "../modules/eventTypes/eventTypeRouter.js";
+// import { eventStatusRouter } from "../modules/eventStatus/eventStatusRouter.js";
 
 const ROUTES = [
     {

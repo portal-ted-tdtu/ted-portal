@@ -1,0 +1,19 @@
+{
+    "name": "ted-portal",
+    "main": "index.js",
+    "compatibility_date": "2026-08-11",
+
+    "d1_databases": [
+        {
+            "binding": "DB",
+            "database_name": "ted-portal",
+            "database_id": "8470ab95-9f5b-4f34-82e3-5e5672e7503c"
+        }
+    ],
+
+    "vars": {
+        "APP_NAME": "TED-PORTAL",
+        "ENVIRONMENT": "production",
+        "JWT_SECRET": "TDTU-TED-PORTAL-2023-12-31"
+    }
+}

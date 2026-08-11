@@ -21,3 +21,5 @@ export async function hashPassword(password) {
         saltRounds
     );
 }
+
+console.log(await hashPassword("123456"));
