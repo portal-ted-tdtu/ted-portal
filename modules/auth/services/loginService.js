@@ -1,16 +1,12 @@
 // ./modules/auth/services/loginService.js
 
-import { UnauthorizedError
- } from "../../../shared/errors/UnauthorizedError.js";
+import { UnauthorizedError  } from "../../../shared/errors/UnauthorizedError.js";
 
-import { createToken
- } from "../../../utils/tokens/createToken.js";
+import { createToken } from "../../../utils/tokens/createToken.js";
 
-import { comparePassword
- } from "../../../utils/passwords/comparePassword.js";
+import { comparePassword } from "../../../utils/passwords/comparePassword.js";
 
-import { findByStudentIdRepository
- } from "../repositories/findByStudentId.js";
+import { findByStudentIdRepository } from "../repositories/findByStudentId.js";
 
 export async function loginService(
     ctx

@@ -1,30 +1,23 @@
 // ./index.js
 
-import { createContext
- } from "./app/context.js";
+import { createContext } from "./app/context.js";
 
-import { router
- } from "./app/router.js";
+import { router } from "./app/router.js";
 
-import { getBody
- } from "./utils/getBody.js";
+import { getBody } from "./utils/getBody.js";
 
-import { getQuery
- } from "./utils/getQuery.js";
+import { getQuery } from "./utils/getQuery.js";
 
-import { getParams
- } from "./utils/getParams.js";
+import { getParams } from "./utils/getParams.js";
 
-import { authMiddleware
- } from "./middlewares/authMiddleware.js";
+import { authMiddleware } from "./middlewares/authMiddleware.js";
 
-import { errorMiddleware
- } from "./middlewares/errorMiddleware.js";
+import { errorMiddleware } from "./middlewares/errorMiddleware.js";
 
 const PUBLIC_PREFIXES = [
 
-    "/api/auth",
-
+    "/api/auth/login",
+    "/api/auth/verifyToken",
     "/api/public"
 ];
 

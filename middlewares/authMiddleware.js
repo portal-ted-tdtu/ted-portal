@@ -1,56 +1,32 @@
-// ./middlewares/authMiddleware.js
+// src/middleware/authMiddleware.js
 
-import { UnauthorizedError
- } from "../shared/errors/UnauthorizedError.js";
+import { UnauthorizedError } from "../shared/errors/UnauthorizedError.js";
+import { verifyToken } from "../utils/tokens/verifyToken.js";
 
-import { validateToken
- } from "../utils/tokens/validateToken.js";
+export async function authMiddleware(ctx) {
+    const authHeader = ctx.request.headers.get("Authorization");
 
-import { decodeToken
- } from "../utils/tokens/decodeToken.js";
-
-/**
- * JWT Authentication
- *
- * @param {Object} ctx
- */
-export async function authMiddleware(
-    ctx
-) {
-
-    const authHeader =
-        ctx.request.headers.get(
-            "Authorization"
-        );
-
-    if (
-        !authHeader ||
-        !authHeader.startsWith(
-            "Bearer "
-        )
-    ) {
-
-        throw new UnauthorizedError(
-            "Token is required"
-        );
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        throw new UnauthorizedError("Token is required");
     }
 
-    const token =
-        authHeader.replace(
-            "Bearer ",
-            ""
-        );
+    const token = authHeader.slice(7).trim();
 
-    const valid =
-        validateToken(token);
-
-    if (!valid) {
-
-        throw new UnauthorizedError(
-            "Token invalid or expired"
-        );
+    if (!token) {
+        throw new UnauthorizedError("Token is required");
     }
 
-    ctx.user =
-        decodeToken(token);
+    const payload = await verifyToken(
+        token,
+        ctx.bindings.jwtSecret
+    );
+
+    if (!payload) {
+        throw new UnauthorizedError("Token invalid or expired");
+    }
+
+    ctx.authToken = token;
+    ctx.user = payload;
+
+    return ctx;
 }

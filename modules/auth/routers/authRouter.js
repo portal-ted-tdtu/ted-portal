@@ -1,56 +1,78 @@
-// ./modules/auth/routers/authRouter.js
+// src/modules/auth/routers/authRouter.js
 
-import { loginValidation
- } from "../validations/loginValidation.js";
+import { matchRoute } from "../../../utils/matchRoute.js";
+import { apiResponse } from "../../../shared/responses/apiResponse.js";
 
-import { loginService
- } from "../services/loginService.js";
+import { loginValidation } from "../validations/loginValidation.js";
+import { changePasswordValidation } from "../validations/changePasswordValidation.js";
+import { resetPasswordValidation } from "../validations/resetPasswordValidation.js";
 
-import { loginResponse
- } from "../responses/loginResponse.js";
+import { loginService } from "../services/loginService.js";
+import { changePasswordService } from "../services/changePasswordService.js";
+import { resetPasswordService } from "../services/resetPasswordService.js";
+import { validateTokenService } from "../services/validateTokenService.js";
 
-export async function authRouter(
-    ctx
-) {
+export async function authRouter(ctx) {
 
-    const url =
-        new URL(
-            ctx.request.url
-        );
+    // Đăng nhập
+    if (matchRoute(ctx.request, "POST", "/api/auth", "/login")) {
+        loginValidation(ctx.body);
 
-    const path =
-        url.pathname;
+        const data = await loginService(ctx);
 
-    const method =
-        ctx.request.method;
+        return apiResponse({
+            success: true,
+            message: "Login successfully",
+            data,
+            status: 200
+        });
+    }
 
-    if (
-        method === "POST" &&
-        path === "/api/auth/login"
-    ) {
+    // Kiểm tra token
+    if (matchRoute(ctx.request, "GET", "/api/auth", "/validate-token")) {
+        const data = await validateTokenService(ctx);
 
-        loginValidation(
-            ctx.body
-        );
+        return apiResponse({
+            success: true,
+            message: "Token is valid",
+            data,
+            status: 200
+        });
+    }
 
-        const result =
-            await loginService(
-                ctx
-            );
+    // Đổi mật khẩu
+    if (matchRoute(ctx.request, "PUT", "/api/auth", "/change-password")) {
+        changePasswordValidation(ctx.body);
 
-        return loginResponse(
-            result
-        );
+        const data = await changePasswordService(ctx);
+
+        return apiResponse({
+            success: true,
+            message: "Password changed successfully",
+            data,
+            status: 200
+        });
+    }
+
+    // Reset mật khẩu
+    if (matchRoute(ctx.request, "PUT", "/api/auth", "/reset-password")) {
+        resetPasswordValidation(ctx.body);
+
+        const data = await resetPasswordService(ctx);
+
+        return apiResponse({
+            success: true,
+            message: "Password reset successfully",
+            data,
+            status: 200
+        });
     }
 
     return Response.json(
         {
             success: false,
-            message:
-                "Route not found"
+            message: "Route not found"
         },
-        {
-            status: 404
-        }
+        { status: 404 }
     );
 }
