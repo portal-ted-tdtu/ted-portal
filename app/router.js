@@ -9,11 +9,12 @@ import { eventStatusRouter } from "../modules/eventStatus/routers/eventStatusRou
 import { eventTypeRouter } from "../modules/eventTypes/routers/eventTypeRouter.js";
 
 import { facultyRouter } from "../modules/faculties/routers/facultyRouter.js";
+import { generationRouter } from "../modules/generations/routers/generationRouter.js";
 import { roleRouter } from "../modules/roles/routers/roleRouter.js";
+import { schoolYearRouter } from "../modules/schoolYears/routers/schoolYearRouter.js";
 
-// import { generationRouter } from "../modules/generations/routers/generationRouter.js";
+
 // import { mistakeRouter } from "../modules/mistakes/routers/mistakeRouter.js";
-// import { schoolYearRouter } from "../modules/schoolYears/routers/schoolYearRouter.js";
 
 const ROUTES = [
     {
@@ -45,21 +46,20 @@ const ROUTES = [
         handler: facultyRouter
     },
     {
+        prefix: "/api/generations",
+        handler: generationRouter
+    },
+    {
         prefix: "/api/roles",
         handler: roleRouter
     },
-    
-    // {
-    //     prefix: "/api/generations",
-    //     handler: generationRouter
-    // },
+    {
+        prefix: "/api/school-years",
+        handler: schoolYearRouter
+    },
     // {
     //     prefix: "/api/mistakes",
     //     handler: mistakeRouter
-    // },
-    // {
-    //     prefix: "/api/school-years",
-    //     handler: schoolYearRouter
     // },
 ];
 
