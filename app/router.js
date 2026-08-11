@@ -6,13 +6,14 @@ import { authRouter } from "../modules/auth/routers/authRouter.js";
 
 import { departmentRouter } from "../modules/departments/routers/departmentRouter.js";
 import { eventStatusRouter } from "../modules/eventStatus/routers/eventStatusRouter.js";
+import { eventTypeRouter } from "../modules/eventTypes/routers/eventTypeRouter.js";
 
-// import { facultyRouter } from "../modules/faculties/routers/facultyRouter.js";
+import { facultyRouter } from "../modules/faculties/routers/facultyRouter.js";
+
 // import { generationRouter } from "../modules/generations/routers/generationRouter.js";
 // import { roleRouter } from "../modules/roles/routers/roleRouter.js";
 // import { mistakeRouter } from "../modules/mistakes/routers/mistakeRouter.js";
 // import { schoolYearRouter } from "../modules/schoolYears/routers/schoolYearRouter.js";
-// import { eventTypeRouter } from "../modules/eventTypes/routers/eventTypeRouter.js";
 
 const ROUTES = [
     {
@@ -35,10 +36,14 @@ const ROUTES = [
         prefix: "/api/event-status",
         handler: eventStatusRouter
     },
-    // {
-    //     prefix: "/api/faculties",
-    //     handler: facultyRouter
-    // },
+    {
+        prefix: "/api/event-types",
+        handler: eventTypeRouter
+    },
+    {
+        prefix: "/api/faculties",
+        handler: facultyRouter
+    },
     // {
     //     prefix: "/api/generations",
     //     handler: generationRouter
@@ -54,10 +59,6 @@ const ROUTES = [
     // {
     //     prefix: "/api/school-years",
     //     handler: schoolYearRouter
-    // },
-    // {
-    //     prefix: "/api/event-types",
-    //     handler: eventTypeRouter
     // },
 ];
 

@@ -18,7 +18,7 @@ export class getDepartmentActiveRepository {
                 department_name
             FROM DEPARTMENTS
             WHERE is_active = 1
-            ORDER BY department_name
+            ORDER BY department_id
             `
         );
     }

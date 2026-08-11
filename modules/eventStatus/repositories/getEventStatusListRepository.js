@@ -28,7 +28,7 @@ export class getEventStatusListRepository {
                 ? IS NULL
                 OR event_status_name LIKE ?
             )
-            ORDER BY event_status_name
+            ORDER BY event_status_id
             LIMIT ?
             OFFSET ?
             `,

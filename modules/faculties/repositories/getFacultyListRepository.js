@@ -1,44 +1,38 @@
-// repositories/getDepartmentListRepository.js
+// src/modules/faculties/repositories/getFacultyListRepository.js
 
 import { all } from "../../../database/query.js";
 
-export class getDepartmentListRepository {
+export class getFacultyListRepository {
 
     constructor(db) {
         this.db = db;
     }
 
-    async getDepartmentList(
-        keyword,
-        limit,
-        offset
-    ) {
+    async getFacultyList(keyword, limit, offset) {
 
         return await all(
             this.db,
             `
             SELECT
-                department_id,
-                department_name,
+                faculty_id,
+                faculty_name,
                 is_active,
                 created_at,
                 created_by,
                 updated_at,
                 updated_by
-            FROM DEPARTMENTS
+            FROM FACUTIES
             WHERE (
                 ? IS NULL
-                OR department_name LIKE ?
+                OR faculty_name LIKE ?
             )
-            ORDER BY department_id
+            ORDER BY faculty_id
             LIMIT ?
             OFFSET ?
             `,
             [
                 keyword,
-                keyword
-                    ? `%${keyword}%`
-                    : null,
+                keyword ? `%${keyword}%` : null,
                 limit,
                 offset
             ]

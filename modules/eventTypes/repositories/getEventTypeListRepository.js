@@ -1,44 +1,40 @@
-// repositories/getDepartmentListRepository.js
+// src/modules/eventTypes/repositories/getEventTypeListRepository.js
 
 import { all } from "../../../database/query.js";
 
-export class getDepartmentListRepository {
+export class getEventTypeListRepository {
 
     constructor(db) {
         this.db = db;
     }
 
-    async getDepartmentList(
-        keyword,
-        limit,
-        offset
-    ) {
+    async getEventTypeList(keyword, limit, offset) {
 
         return await all(
             this.db,
             `
             SELECT
-                department_id,
-                department_name,
+                event_type_id,
+                event_type_name,
+                description,
+                color,
                 is_active,
                 created_at,
                 created_by,
                 updated_at,
                 updated_by
-            FROM DEPARTMENTS
+            FROM EVENT_TYPES
             WHERE (
                 ? IS NULL
-                OR department_name LIKE ?
+                OR event_type_name LIKE ?
             )
-            ORDER BY department_id
+            ORDER BY event_type_id
             LIMIT ?
             OFFSET ?
             `,
             [
                 keyword,
-                keyword
-                    ? `%${keyword}%`
-                    : null,
+                keyword ? `%${keyword}%` : null,
                 limit,
                 offset
             ]
