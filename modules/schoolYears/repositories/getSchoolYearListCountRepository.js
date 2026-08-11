@@ -1,4 +1,4 @@
-// src/modules/schoolYears/repositories/getSchoolYearListCountRepository.js
+// modules/schoolYears/repositories/getSchoolYearListCountRepository.js
 
 import { first } from "../../../database/query.js";
 

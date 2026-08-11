@@ -9,7 +9,7 @@ import { createSchoolYearService } from "../services/createSchoolYearService.js"
 
 export async function schoolYearRouter(ctx) {
 
-    if (matchRoute(ctx.request, "GET", "/api/school-years", "/list")) {
+    if (matchRoute(ctx, "GET", "/api/school-years", "/list")) {
 
         getSchoolYearListValidation(ctx.query);
 
@@ -22,7 +22,7 @@ export async function schoolYearRouter(ctx) {
         });
     }
 
-    if (matchRoute(ctx.request, "GET", "/api/school-years", "/active")) {
+    if (matchRoute(ctx, "GET", "/api/school-years", "/active")) {
 
         const data = await getSchoolYearActiveService(ctx);
 
@@ -33,7 +33,7 @@ export async function schoolYearRouter(ctx) {
         });
     }
 
-    if (matchRoute(ctx.request, "POST", "/api/school-years", "/create")) {
+    if (matchRoute(ctx, "POST", "/api/school-years", "/create")) {
 
         const data = await createSchoolYearService(ctx);
 

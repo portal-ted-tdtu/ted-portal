@@ -1,4 +1,4 @@
-// src/modules/faculties/services/getFacultyListService.js
+// modules/faculties/services/getFacultyListService.js
 
 import { ForbiddenError } from "../../../shared/errors/ForbiddenError.js";
 import { ROLE } from "../../../shared/constants/permission.js";

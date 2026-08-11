@@ -1,4 +1,4 @@
-// src/modules/eventStatus/repositories/getEventStatusListRepository.js
+// modules/eventStatus/repositories/getEventStatusListRepository.js
 
 import { all } from "../../../database/query.js";
 

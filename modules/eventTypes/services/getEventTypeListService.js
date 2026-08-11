@@ -1,4 +1,4 @@
-// src/modules/eventTypes/services/getEventTypeListService.js
+// modules/eventTypes/services/getEventTypeListService.js
 
 import { ForbiddenError } from "../../../shared/errors/ForbiddenError.js";
 import { ROLE } from "../../../shared/constants/permission.js";

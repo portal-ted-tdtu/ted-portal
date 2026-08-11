@@ -1,4 +1,4 @@
-// src/utils/tokens/createToken.js
+// utils/tokens/createToken.js
 
 import { SignJWT } from "jose";
 

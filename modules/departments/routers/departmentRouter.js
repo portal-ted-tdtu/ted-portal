@@ -8,7 +8,7 @@ import { getDepartmentActiveService } from "../services/getDepartmentActiveServi
 
 export async function departmentRouter(ctx) {
 
-    if (matchRoute(ctx.request, "GET", "/api/departments", "/list")) {
+    if (matchRoute(ctx, "GET", "/api/departments", "/list")) {
 
         getDepartmentListValidation(ctx.query);
 
@@ -21,7 +21,7 @@ export async function departmentRouter(ctx) {
         });
     }
 
-    if (matchRoute(ctx.request, "GET", "/api/departments", "/active")) {
+    if (matchRoute(ctx, "GET", "/api/departments", "/active")) {
 
         const data = await getDepartmentActiveService(ctx);
 

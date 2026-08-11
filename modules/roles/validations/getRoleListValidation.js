@@ -1,4 +1,4 @@
-// src/modules/roles/validations/getRoleListValidation.js
+// modules/roles/validations/getRoleListValidation.js
 
 import { validateRequest } from "../../../utils/validators/validateRequest.js";
 import { GetRoleListRequest } from "../requests/GetRoleListRequest.js";

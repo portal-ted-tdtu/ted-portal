@@ -1,4 +1,4 @@
-// src/modules/auth/services/validateTokenService.js
+// modules/auth/services/validateTokenService.js
 
 import { verifyToken } from "../../../utils/tokens/verifyToken.js";
 

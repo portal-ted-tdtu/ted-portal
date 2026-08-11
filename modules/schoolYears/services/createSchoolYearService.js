@@ -1,4 +1,4 @@
-// src/modules/schoolYears/services/createSchoolYearService.js
+// modules/schoolYears/services/createSchoolYearService.js
 
 import { ROLE } from "../../../shared/constants/permission.js";
 import { ForbiddenError } from "../../../shared/errors/ForbiddenError.js";
@@ -10,6 +10,8 @@ import { increaseCounter } from "../../../utils/counters/increaseCounter.js";
 import { createSchoolYearRepository } from "../repositories/createSchoolYearRepository.js";
 import { buildSchoolYear } from "./buildSchoolYear.js";
 
+const PREFIX_KEY = "NH"
+
 export async function createSchoolYearService(ctx) {
 
     if (!checkRole(ctx.user, ROLE.CAPTAIN)) {
@@ -19,7 +21,7 @@ export async function createSchoolYearService(ctx) {
     const counter = await getNextCounter(
         ctx.bindings.db,
         "SCHOOL_YEARS",
-        "NH"
+        PREFIX_KEY
     );
 
     const schoolYear =
@@ -43,7 +45,7 @@ export async function createSchoolYearService(ctx) {
     await increaseCounter(
         ctx.bindings.db,
         "SCHOOL_YEARS",
-        "NH"
+        PREFIX_KEY
     );
 
     return schoolYear;

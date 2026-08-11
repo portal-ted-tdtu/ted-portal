@@ -1,4 +1,4 @@
-// src/utils/tokens/verifyToken.js
+// utils/tokens/verifyToken.js
 
 import { jwtVerify } from "jose";
 

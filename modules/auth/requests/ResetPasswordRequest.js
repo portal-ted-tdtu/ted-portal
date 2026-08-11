@@ -1,4 +1,4 @@
-// src/modules/auth/requests/ResetPasswordRequest.js
+// modules/auth/requests/ResetPasswordRequest.js
 
 export const ResetPasswordRequest = {
     student_id: {

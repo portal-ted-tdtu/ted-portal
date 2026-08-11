@@ -1,4 +1,4 @@
-// src/utils/permission/checkPermission.js
+// utils/permission/checkPermission.js
 
 export function checkDepartment(user, departmentId) {
     if (!user) {

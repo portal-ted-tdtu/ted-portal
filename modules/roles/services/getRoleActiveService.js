@@ -1,4 +1,4 @@
-// src/modules/roles/services/getRoleActiveService.js
+// modules/roles/services/getRoleActiveService.js
 
 import { getRoleActiveRepository } from "../repositories/getRoleActiveRepository.js";
 

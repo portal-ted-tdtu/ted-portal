@@ -1,4 +1,4 @@
-// src/modules/auth/services/changePasswordService.js
+// modules/auth/services/changePasswordService.js
 
 import { UnauthorizedError } from "../../../shared/errors/UnauthorizedError.js";
 

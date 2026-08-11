@@ -1,4 +1,4 @@
-// src/modules/eventStatus/repositories/getEventStatusListCountRepository.js
+// modules/eventStatus/repositories/getEventStatusListCountRepository.js
 
 import { first } from "../../../database/query.js";
 

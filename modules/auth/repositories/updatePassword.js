@@ -1,4 +1,4 @@
-// src/modules/auth/repositories/updatePassword.js
+// modules/auth/repositories/updatePassword.js
 
 import { run } from "../../../database/query.js";
 

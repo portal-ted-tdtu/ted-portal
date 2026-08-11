@@ -1,4 +1,4 @@
-// src/modules/auth/repositories/findByUserId.js
+// modules/auth/repositories/findByUserId.js
 
 import { first } from "../../../database/query.js";
 

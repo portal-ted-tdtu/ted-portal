@@ -1,4 +1,4 @@
-// src/modules/generations/requests/GetGenerationListRequest.js
+// modules/generations/requests/GetGenerationListRequest.js
 
 export const GetGenerationListRequest = {
     page: {

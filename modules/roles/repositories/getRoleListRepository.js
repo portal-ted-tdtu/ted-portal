@@ -1,4 +1,4 @@
-// src/modules/roles/repositories/getRoleListRepository.js
+// modules/roles/repositories/getRoleListRepository.js
 
 import { all } from "../../../database/query.js";
 

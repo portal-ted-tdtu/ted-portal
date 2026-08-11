@@ -1,4 +1,4 @@
-// src/modules/eventStatus/routers/eventStatusRouter.js
+// modules/eventStatus/routers/eventStatusRouter.js
 
 import { matchRoute } from "../../../utils/matchRoute.js";
 import { apiResponse } from "../../../shared/responses/apiResponse.js";
@@ -10,7 +10,7 @@ import { getEventStatusActiveService } from "../services/getEventStatusActiveSer
 
 export async function eventStatusRouter(ctx) {
 
-    if (matchRoute(ctx.request, "GET", "/api/event-status", "/list")) {
+    if (matchRoute(ctx, "GET", "/api/event-status", "/list")) {
 
         getEventStatusListValidation(ctx.query);
 
@@ -23,7 +23,7 @@ export async function eventStatusRouter(ctx) {
         });
     }
 
-    if (matchRoute(ctx.request, "GET", "/api/event-status", "/active")) {
+    if (matchRoute(ctx, "GET", "/api/event-status", "/active")) {
 
         const data = await getEventStatusActiveService(ctx);
 

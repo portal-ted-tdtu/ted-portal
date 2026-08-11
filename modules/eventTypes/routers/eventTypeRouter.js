@@ -8,7 +8,7 @@ import { getEventTypeActiveService } from "../services/getEventTypeActiveService
 
 export async function eventTypeRouter(ctx) {
 
-    if (matchRoute(ctx.request, "GET", "/api/event-types", "/list")) {
+    if (matchRoute(ctx, "GET", "/api/event-types", "/list")) {
 
         getEventTypeListValidation(ctx.query);
 
@@ -21,7 +21,7 @@ export async function eventTypeRouter(ctx) {
         });
     }
 
-    if (matchRoute(ctx.request, "GET", "/api/event-types", "/active")) {
+    if (matchRoute(ctx, "GET", "/api/event-types", "/active")) {
 
         const data = await getEventTypeActiveService(ctx);
 

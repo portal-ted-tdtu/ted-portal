@@ -1,4 +1,4 @@
-// src/modules/schoolYears/services/getSchoolYearActiveService.js
+// modules/schoolYears/services/getSchoolYearActiveService.js
 
 import { getSchoolYearActiveRepository } from "../repositories/getSchoolYearActiveRepository.js";
 

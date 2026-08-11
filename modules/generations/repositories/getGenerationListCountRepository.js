@@ -1,4 +1,4 @@
-// src/modules/generations/repositories/getGenerationListCountRepository.js
+// modules/generations/repositories/getGenerationListCountRepository.js
 
 import { first } from "../../../database/query.js";
 

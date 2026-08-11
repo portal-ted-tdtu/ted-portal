@@ -1,4 +1,4 @@
-// src/modules/eventStatus/validations/getEventStatusListValidation.js
+// modules/eventStatus/validations/getEventStatusListValidation.js
 
 import { validateRequest } from "../../../utils/validators/validateRequest.js";
 import { GetEventStatusListRequest } from "../requests/GetEventStatusListRequest.js";

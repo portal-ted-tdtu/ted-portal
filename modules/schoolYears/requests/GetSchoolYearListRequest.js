@@ -1,4 +1,4 @@
-// src/modules/schoolYears/requests/GetSchoolYearListRequest.js
+// modules/schoolYears/requests/GetSchoolYearListRequest.js
 
 export const GetSchoolYearListRequest = {
     page: {

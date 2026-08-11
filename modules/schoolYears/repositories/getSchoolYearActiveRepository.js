@@ -1,4 +1,4 @@
-// src/modules/schoolYears/repositories/getSchoolYearActiveRepository.js
+// modules/schoolYears/repositories/getSchoolYearActiveRepository.js
 
 import { all } from "../../../database/query.js";
 

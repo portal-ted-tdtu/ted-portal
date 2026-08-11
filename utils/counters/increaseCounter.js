@@ -1,4 +1,4 @@
-// src/utils/counters/increaseCounter.js
+// utils/counters/increaseCounter.js
 
 import { run } from "../../database/query.js";
 

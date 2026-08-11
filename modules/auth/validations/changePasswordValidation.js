@@ -1,4 +1,4 @@
-// src/modules/auth/validations/changePasswordValidation.js
+// modules/auth/validations/changePasswordValidation.js
 
 import { validateRequest } from "../../../utils/validators/validateRequest.js";
 

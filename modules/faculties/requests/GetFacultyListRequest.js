@@ -1,4 +1,4 @@
-// src/modules/faculties/requests/GetFacultyListRequest.js
+// modules/faculties/requests/GetFacultyListRequest.js
 
 export const GetFacultyListRequest = {
     page: {

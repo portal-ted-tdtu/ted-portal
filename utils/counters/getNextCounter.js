@@ -1,3 +1,5 @@
+// utils\counters\getNextCounter.js
+
 import { first } from "../../database/query.js";
 
 export async function getNextCounter(db, tableName, prefix, length = 3) {

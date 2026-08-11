@@ -1,4 +1,4 @@
-// src/modules/eventStatus/services/getEventStatusActiveService.js
+// modules/eventStatus/services/getEventStatusActiveService.js
 
 import { getEventStatusActiveRepository } from "../repositories/getEventStatusActiveRepository.js";
 

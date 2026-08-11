@@ -1,4 +1,4 @@
-// src/modules/auth/routers/authRouter.js
+// modules/auth/routers/authRouter.js
 
 import { matchRoute } from "../../../utils/matchRoute.js";
 import { apiResponse } from "../../../shared/responses/apiResponse.js";
@@ -15,7 +15,7 @@ import { validateTokenService } from "../services/validateTokenService.js";
 export async function authRouter(ctx) {
 
     // Đăng nhập
-    if (matchRoute(ctx.request, "POST", "/api/auth", "/login")) {
+    if (matchRoute(ctx, "POST", "/api/auth", "/login")) {
         loginValidation(ctx.body);
 
         const data = await loginService(ctx);
@@ -29,7 +29,7 @@ export async function authRouter(ctx) {
     }
 
     // Kiểm tra token
-    if (matchRoute(ctx.request, "GET", "/api/auth", "/validate-token")) {
+    if (matchRoute(ctx, "GET", "/api/auth", "/validate-token")) {
         const data = await validateTokenService(ctx);
 
         return apiResponse({
@@ -41,7 +41,7 @@ export async function authRouter(ctx) {
     }
 
     // Đổi mật khẩu
-    if (matchRoute(ctx.request, "PUT", "/api/auth", "/change-password")) {
+    if (matchRoute(ctx, "PUT", "/api/auth", "/change-password")) {
         changePasswordValidation(ctx.body);
 
         const data = await changePasswordService(ctx);
@@ -55,7 +55,7 @@ export async function authRouter(ctx) {
     }
 
     // Reset mật khẩu
-    if (matchRoute(ctx.request, "PUT", "/api/auth", "/reset-password")) {
+    if (matchRoute(ctx, "PUT", "/api/auth", "/reset-password")) {
         resetPasswordValidation(ctx.body);
 
         const data = await resetPasswordService(ctx);

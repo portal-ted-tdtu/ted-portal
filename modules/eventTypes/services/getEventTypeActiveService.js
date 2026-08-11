@@ -1,4 +1,4 @@
-// src/modules/eventTypes/services/getEventTypeActiveService.js
+// modules/eventTypes/services/getEventTypeActiveService.js
 
 import { getEventTypeActiveRepository } from "../repositories/getEventTypeActiveRepository.js";
 

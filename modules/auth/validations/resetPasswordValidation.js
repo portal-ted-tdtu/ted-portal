@@ -1,4 +1,4 @@
-// src/modules/auth/validations/resetPasswordValidation.js
+// modules/auth/validations/resetPasswordValidation.js
 
 import { validateRequest } from "../../../utils/validators/validateRequest.js";
 

@@ -10,11 +10,10 @@ import { eventTypeRouter } from "../modules/eventTypes/routers/eventTypeRouter.j
 
 import { facultyRouter } from "../modules/faculties/routers/facultyRouter.js";
 import { generationRouter } from "../modules/generations/routers/generationRouter.js";
+import { mistakeRouter } from "../modules/mistakes/routers/mistakeRouter.js";
 import { roleRouter } from "../modules/roles/routers/roleRouter.js";
 import { schoolYearRouter } from "../modules/schoolYears/routers/schoolYearRouter.js";
 
-
-// import { mistakeRouter } from "../modules/mistakes/routers/mistakeRouter.js";
 
 const ROUTES = [
     {
@@ -50,6 +49,10 @@ const ROUTES = [
         handler: generationRouter
     },
     {
+        prefix: "/api/mistakes",
+        handler: mistakeRouter
+    },
+    {
         prefix: "/api/roles",
         handler: roleRouter
     },
@@ -57,10 +60,6 @@ const ROUTES = [
         prefix: "/api/school-years",
         handler: schoolYearRouter
     },
-    // {
-    //     prefix: "/api/mistakes",
-    //     handler: mistakeRouter
-    // },
 ];
 
 export async function router(ctx) {

@@ -1,4 +1,4 @@
-// src/modules/roles/routers/roleRouter.js
+// modules/roles/routers/roleRouter.js
 
 import { matchRoute } from "../../../utils/matchRoute.js";
 import { apiResponse } from "../../../shared/responses/apiResponse.js";
@@ -10,7 +10,7 @@ import { getRoleActiveService } from "../services/getRoleActiveService.js";
 
 export async function roleRouter(ctx) {
 
-    if (matchRoute(ctx.request, "GET", "/api/roles", "/list")) {
+    if (matchRoute(ctx, "GET", "/api/roles", "/list")) {
 
         getRoleListValidation(ctx.query);
 
@@ -23,7 +23,7 @@ export async function roleRouter(ctx) {
         });
     }
 
-    if (matchRoute(ctx.request, "GET", "/api/roles", "/active")) {
+    if (matchRoute(ctx, "GET", "/api/roles", "/active")) {
 
         const data = await getRoleActiveService(ctx);
 

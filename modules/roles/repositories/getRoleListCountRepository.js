@@ -1,4 +1,4 @@
-// src/modules/roles/repositories/getRoleListCountRepository.js
+// modules/roles/repositories/getRoleListCountRepository.js
 
 import { first } from "../../../database/query.js";
 

@@ -1,4 +1,4 @@
-// src/modules/faculties/repositories/getFacultyListRepository.js
+// modules/faculties/repositories/getFacultyListRepository.js
 
 import { all } from "../../../database/query.js";
 

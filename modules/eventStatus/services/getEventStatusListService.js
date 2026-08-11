@@ -1,4 +1,4 @@
-// src/modules/eventStatus/services/getEventStatusListService.js
+// modules/eventStatus/services/getEventStatusListService.js
 
 import { ForbiddenError } from "../../../shared/errors/ForbiddenError.js";
 import { ROLE } from "../../../shared/constants/permission.js";

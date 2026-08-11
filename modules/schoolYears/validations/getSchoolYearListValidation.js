@@ -1,4 +1,4 @@
-// src/modules/schoolYears/validations/getSchoolYearListValidation.js
+// modules/schoolYears/validations/getSchoolYearListValidation.js
 
 import { validateRequest } from "../../../utils/validators/validateRequest.js";
 import { GetSchoolYearListRequest } from "../requests/GetSchoolYearListRequest.js";

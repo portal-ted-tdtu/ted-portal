@@ -19,33 +19,86 @@
  * );
  */
 export function matchRoute(
-    request,
+    ctx,
     method,
     root,
     path
 ) {
+    const url = new URL(ctx.request.url);
 
-    const url = new URL(
-        request.url
-    );
+    const requestMethod =
+        ctx.request.method.toUpperCase();
 
-    const requestMethod = request.method.toUpperCase();
+    const requestPath =
+        normalizePath(url.pathname);
 
-    const requestPath = normalizePath(url.pathname);
+    const expectedMethod =
+        method.toUpperCase();
 
-    const expectedMethod = method.toUpperCase();
+    const expectedRoute =
+        normalizePath(
+            `${root}${path}`
+        );
 
-    const expectedRoot = normalizePath(root);
+    if (
+        requestMethod !== expectedMethod
+    ) {
+        return false;
+    }
 
-    const expectedPath = normalizePath(path);
+    const routeParts =
+        expectedRoute
+            .split("/")
+            .filter(Boolean);
 
-    const expectedRoute = normalizePath( `${expectedRoot}${expectedPath}` );
+    const requestParts =
+        requestPath
+            .split("/")
+            .filter(Boolean);
 
-    return (
-        requestMethod === expectedMethod &&
-        requestPath === expectedRoute
-    );
+    if (
+        routeParts.length !==
+        requestParts.length
+    ) {
+        return false;
+    }
+
+    const params = {};
+
+    const matched =
+        routeParts.every(
+            (part, index) => {
+
+                const requestPart =
+                    requestParts[index];
+
+                if (
+                    part.startsWith(":")
+                ) {
+                    const paramName =
+                        part.slice(1);
+
+                    params[paramName] =
+                        decodeURIComponent(
+                            requestPart
+                        );
+
+                    return true;
+                }
+
+                return (
+                    part === requestPart
+                );
+            }
+        );
+
+    if (matched) {
+        ctx.params = params;
+    }
+
+    return matched;
 }
+
 
 /**
  * Chuẩn hóa path.
@@ -62,7 +115,6 @@ export function matchRoute(
  * @returns {string}
  */
 function normalizePath(path) {
-
     if (!path) {
         return "";
     }
@@ -72,7 +124,9 @@ function normalizePath(path) {
             .trim()
             .replace(/\/+/g, "/");
 
-    if (!normalized.startsWith("/")) {
+    if (
+        !normalized.startsWith("/")
+    ) {
         normalized =
             `/${normalized}`;
     }

@@ -8,7 +8,7 @@ import { getFacultyActiveService } from "../services/getFacultyActiveService.js"
 
 export async function facultyRouter(ctx) {
 
-    if (matchRoute(ctx.request, "GET", "/api/faculties", "/list")) {
+    if (matchRoute(ctx, "GET", "/api/faculties", "/list")) {
 
         getFacultyListValidation(ctx.query);
 
@@ -21,7 +21,7 @@ export async function facultyRouter(ctx) {
         });
     }
 
-    if (matchRoute(ctx.request, "GET", "/api/faculties", "/active")) {
+    if (matchRoute(ctx, "GET", "/api/faculties", "/active")) {
 
         const data = await getFacultyActiveService(ctx);
 

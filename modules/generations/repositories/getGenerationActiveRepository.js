@@ -1,4 +1,4 @@
-// src/modules/generations/repositories/getGenerationActiveRepository.js
+// modules/generations/repositories/getGenerationActiveRepository.js
 
 import { all } from "../../../database/query.js";
 

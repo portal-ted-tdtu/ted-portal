@@ -1,4 +1,4 @@
-// src/utils/tokens/decodeToken.js
+// utils/tokens/decodeToken.js
 
 /**
  * Decode JWT payload.

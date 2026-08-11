@@ -1,4 +1,4 @@
-// src/modules/roles/requests/GetRoleListRequest.js
+// modules/roles/requests/GetRoleListRequest.js
 
 export const GetRoleListRequest = {
     page: {

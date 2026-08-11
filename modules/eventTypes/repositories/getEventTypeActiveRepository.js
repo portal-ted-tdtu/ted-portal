@@ -1,4 +1,4 @@
-// src/modules/eventTypes/repositories/getEventTypeActiveRepository.js
+// modules/eventTypes/repositories/getEventTypeActiveRepository.js
 
 import { all } from "../../../database/query.js";
 

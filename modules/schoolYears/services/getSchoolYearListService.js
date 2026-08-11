@@ -1,4 +1,4 @@
-// src/modules/schoolYears/services/getSchoolYearListService.js
+// modules/schoolYears/services/getSchoolYearListService.js
 
 import { ROLE } from "../../../shared/constants/permission.js";
 import { ForbiddenError } from "../../../shared/errors/ForbiddenError.js";

@@ -1,4 +1,4 @@
-// src/middleware/authMiddleware.js
+// middleware/authMiddleware.js
 
 import { UnauthorizedError } from "../shared/errors/UnauthorizedError.js";
 import { verifyToken } from "../utils/tokens/verifyToken.js";

@@ -1,4 +1,4 @@
-// src/modules/generations/services/createGenerationService.js
+// modules/generations/services/createGenerationService.js
 
 import { ForbiddenError } from "../../../shared/errors/ForbiddenError.js";
 import { ROLE } from "../../../shared/constants/permission.js";
@@ -9,6 +9,8 @@ import { increaseCounter } from "../../../utils/counters/increaseCounter.js";
 
 import { createGenerationRepository } from "../repositories/createGenerationRepository.js";
 
+const PREFIX_KEY = "TED"
+
 export async function createGenerationService(ctx) {
 
     if (!checkRole(ctx.user, ROLE.CAPTAIN)) {
@@ -18,7 +20,7 @@ export async function createGenerationService(ctx) {
     const counter = await getNextCounter(
         ctx.bindings.db,
         "GENERATIONS",
-        "TED"
+        PREFIX_KEY
     );
 
     const generationId = counter.code;
@@ -38,7 +40,7 @@ export async function createGenerationService(ctx) {
     await increaseCounter(
         ctx.bindings.db,
         "GENERATIONS",
-        "TED"
+        PREFIX_KEY
     );
 
     return {

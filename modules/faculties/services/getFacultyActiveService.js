@@ -1,4 +1,4 @@
-// src/modules/faculties/services/getFacultyActiveService.js
+// modules/faculties/services/getFacultyActiveService.js
 
 import { getFacultyActiveRepository } from "../repositories/getFacultyActiveRepository.js";
 

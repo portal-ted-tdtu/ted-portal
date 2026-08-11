@@ -10,7 +10,7 @@ import { createGenerationService } from "../services/createGenerationService.js"
 
 export async function generationRouter(ctx) {
 
-    if (matchRoute(ctx.request, "GET", "/api/generations", "/list")) {
+    if (matchRoute(ctx, "GET", "/api/generations", "/list")) {
 
         getGenerationListValidation(ctx.query);
 
@@ -23,7 +23,7 @@ export async function generationRouter(ctx) {
         });
     }
 
-    if (matchRoute(ctx.request, "GET", "/api/generations", "/active")) {
+    if (matchRoute(ctx, "GET", "/api/generations", "/active")) {
 
         const data = await getGenerationActiveService(ctx);
 
@@ -34,7 +34,7 @@ export async function generationRouter(ctx) {
         });
     }
 
-    if (matchRoute(ctx.request, "POST", "/api/generations", "/create")) {
+    if (matchRoute(ctx, "POST", "/api/generations", "/create")) {
 
         createGenerationValidation(ctx.body);
 

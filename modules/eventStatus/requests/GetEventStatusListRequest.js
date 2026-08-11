@@ -1,4 +1,4 @@
-// src/modules/eventStatus/requests/GetEventStatusListRequest.js
+// modules/eventStatus/requests/GetEventStatusListRequest.js
 
 export const GetEventStatusListRequest = {
     page: {

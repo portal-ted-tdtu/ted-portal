@@ -1,4 +1,4 @@
-// src/utils/tokens/validateToken.js
+// utils/tokens/validateToken.js
 
 import { decodeToken } from "./decodeToken.js";
 

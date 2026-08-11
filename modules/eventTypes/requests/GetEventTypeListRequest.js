@@ -1,4 +1,4 @@
-// src/modules/eventTypes/requests/GetEventTypeListRequest.js
+// modules/eventTypes/requests/GetEventTypeListRequest.js
 
 export const GetEventTypeListRequest = {
     page: {

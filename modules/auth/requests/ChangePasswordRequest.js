@@ -1,4 +1,4 @@
-// src/modules/auth/requests/ChangePasswordRequest.js
+// modules/auth/requests/ChangePasswordRequest.js
 
 export const ChangePasswordRequest = {
     old_password: {
