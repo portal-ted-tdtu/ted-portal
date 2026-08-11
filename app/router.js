@@ -1,17 +1,18 @@
 // ./app/router.js
 
 import { authRouter } from "../modules/auth/routers/authRouter.js";
-// import { userRouter } from "../modules/users/userRouter.js";
-// import { eventRouter } from "../modules/events/eventRouter.js";
+// import { userRouter } from "../modules/users/routers/userRouter.js";
+// import { eventRouter } from "../modules/events/routers/eventRouter.js";
 
-// import { departmentRouter } from "../modules/departments/departmentRouter.js";
-// import { facultyRouter } from "../modules/faculties/facultyRouter.js";
-// import { generationRouter } from "../modules/generations/generationRouter.js";
-// import { roleRouter } from "../modules/roles/roleRouter.js";
-// import { mistakeRouter } from "../modules/mistakes/mistakeRouter.js";
-// import { schoolYearRouter } from "../modules/schoolYears/schoolYearRouter.js";
-// import { eventTypeRouter } from "../modules/eventTypes/eventTypeRouter.js";
-// import { eventStatusRouter } from "../modules/eventStatus/eventStatusRouter.js";
+import { departmentRouter } from "../modules/departments/routers/departmentRouter.js";
+import { eventStatusRouter } from "../modules/eventStatus/routers/eventStatusRouter.js";
+
+// import { facultyRouter } from "../modules/faculties/routers/facultyRouter.js";
+// import { generationRouter } from "../modules/generations/routers/generationRouter.js";
+// import { roleRouter } from "../modules/roles/routers/roleRouter.js";
+// import { mistakeRouter } from "../modules/mistakes/routers/mistakeRouter.js";
+// import { schoolYearRouter } from "../modules/schoolYears/routers/schoolYearRouter.js";
+// import { eventTypeRouter } from "../modules/eventTypes/routers/eventTypeRouter.js";
 
 const ROUTES = [
     {
@@ -26,10 +27,14 @@ const ROUTES = [
     //     prefix: "/api/events",
     //     handler: eventRouter
     // },
-    // {
-    //     prefix: "/api/departments",
-    //     handler: departmentRouter
-    // },
+    {
+        prefix: "/api/departments",
+        handler: departmentRouter
+    },
+    {
+        prefix: "/api/event-status",
+        handler: eventStatusRouter
+    },
     // {
     //     prefix: "/api/faculties",
     //     handler: facultyRouter
@@ -54,10 +59,6 @@ const ROUTES = [
     //     prefix: "/api/event-types",
     //     handler: eventTypeRouter
     // },
-    // {
-    //     prefix: "/api/event-status",
-    //     handler: eventStatusRouter
-    // }
 ];
 
 export async function router(ctx) {
