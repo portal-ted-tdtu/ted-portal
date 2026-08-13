@@ -1,0 +1,1650 @@
+// ./database/transaction.js
+
+export async function executeTransaction(
+    db,
+    callback
+) {
+
+    try {
+
+        await db.exec("BEGIN TRANSACTION");
+
+        const result = await callback(db);
+
+        await db.exec("COMMIT");
+
+        return result;
+
+    } catch (error) {
+
+        try {
+            await db.exec("ROLLBACK");
+        } catch (rollbackError) {
+            console.error(
+                "Rollback failed:",
+                rollbackError
+            );
+        }
+
+        throw error;
+    }
+}
+
+
+
+// ./repositories/baseRepository.js
+
+import {
+    first,
+    all,
+    run
+} from "../database/query.js";
+
+export class BaseRepository {
+
+    constructor(
+        db,
+        tableName,
+        primaryKey
+    ) {
+        this.db = db;
+        this.tableName = tableName;
+        this.primaryKey = primaryKey;
+    }
+
+    async findById(id) {
+
+        return first(
+            this.db,
+            `
+            SELECT *
+            FROM ${this.tableName}
+            WHERE ${this.primaryKey} = ?
+            `,
+            [id]
+        );
+    }
+
+    async findAll() {
+
+        return all(
+            this.db,
+            `
+            SELECT *
+            FROM ${this.tableName}
+            WHERE is_active = 1
+            `
+        );
+    }
+
+    async softDelete(id) {
+
+        return run(
+            this.db,
+            `
+            UPDATE ${this.tableName}
+            SET is_active = 0
+            WHERE ${this.primaryKey} = ?
+            `,
+            [id]
+        );
+    }
+}
+
+
+
+// ./shared/constants/system.js
+
+export const SYSTEM = {
+
+    DEFAULT_PAGE: 1,
+
+    DEFAULT_PAGE_SIZE: 20,
+
+    MAX_PAGE_SIZE: 100,
+
+    DEFAULT_TIMEZONE:
+        "Asia/Ho_Chi_Minh"
+};
+
+
+
+// shared/constants/permission.js
+
+export const ROLE = {
+    ADMIN: "ADMIN",
+    CAPTAIN: "CAPTAIN",
+    LEADER: "LEADER",
+    DEPUTY: "DEPUTY",
+    TREASURER: "TREASURER",
+    MEMBER: "MEMBER",
+    SUPPORTER: "SUPPORTER"
+};
+
+export const ROLE_GROUP = {
+    MB: [
+        ROLE.CAPTAIN,
+        ROLE.LEADER,
+        ROLE.DEPUTY
+    ],
+
+    TEAMLEAD: [
+        ROLE.LEADER,
+        ROLE.LEADER
+    ]
+};
+
+export const DEPARTMENT = {
+    PD: "PD",
+    DD: "DD",
+    PRD: "PRD"
+};
+
+
+
+// ./shared/errors/AppError.js
+
+export class AppError extends Error {
+
+    constructor(
+        message,
+        statusCode = 500,
+        errors = []
+    ) {
+
+        super(message);
+
+        this.name = this.constructor.name;
+
+        this.statusCode = statusCode;
+
+        this.errors = errors;
+    }
+}
+
+
+
+// ./shared/errors/AppError.js
+
+export class AppError extends Error {
+
+    constructor(
+        message,
+        statusCode = 500,
+        errors = []
+    ) {
+
+        super(message);
+
+        this.name = this.constructor.name;
+
+        this.statusCode = statusCode;
+
+        this.errors = errors;
+    }
+}
+
+
+
+// shared/errors/ConflictError.js
+
+export class ConflictError extends Error {
+
+    constructor(message = "Conflict") {
+
+        super(message);
+
+        this.name = "ConflictError";
+
+        this.status = 409;
+    }
+}
+
+
+
+// ./shared/errors/ForbiddenError.js
+
+import { AppError } from "./AppError.js";
+
+export class ForbiddenError
+    extends AppError {
+
+    constructor(
+        message = "Forbidden"
+    ) {
+
+        super(
+            message,
+            403
+        );
+    }
+}
+
+
+
+// ./shared/errors/NotFoundError.js
+
+import { AppError } from "./AppError.js";
+
+export class NotFoundError
+    extends AppError {
+
+    constructor(
+        message = "Data not found"
+    ) {
+
+        super(
+            message,
+            404
+        );
+    }
+}
+
+
+
+// ./shared/errors/UnauthorizedError.js
+
+import { AppError } from "./AppError.js";
+
+export class UnauthorizedError
+    extends AppError {
+
+    constructor(
+        message = "Unauthorized"
+    ) {
+
+        super(
+            message,
+            401
+        );
+    }
+}
+
+
+
+// ./shared/errors/ValidationError.js
+
+import { AppError } from "./AppError.js";
+
+export class ValidationError
+    extends AppError {
+
+    constructor(
+        message = "Validation failed",
+        errors = []
+    ) {
+
+        super(
+            message,
+            400,
+            errors
+        );
+    }
+}
+
+
+
+export function apiResponse({
+    success = true,
+    message = "",
+    data = null,
+    errors = [],
+    paging = null,
+    status = 200
+}) {
+
+    return Response.json(
+        {
+            success,
+            message,
+            data,
+            errors,
+            paging
+        },
+        {
+            status
+        }
+    );
+}
+
+
+
+// utils\counters\getNextCounter.js
+
+import { first } from "../../database/query.js";
+
+export async function getNextCounter(db, tableName, prefix, length = 3) {
+
+    const counter = await first(
+        db,
+        `
+        SELECT
+            table_name,
+            prefix,
+            current,
+            length
+        FROM COUNTERS
+        WHERE table_name = ?
+        AND prefix = ?
+        LIMIT 1
+        `,
+        [tableName, prefix]
+    );
+
+    if (!counter) {
+        return {
+            code: prefix + String(0).padStart(length, "0"),
+            number: 0,
+            current: 0,
+            prefix,
+            length
+        };
+    }
+
+    const number = counter.current;
+
+    const code =
+        counter.prefix +
+        String(number).padStart(
+            counter.length,
+            "0"
+        );
+
+    return {
+        code,
+        number,
+        current: counter.current,
+        prefix: counter.prefix,
+        length: counter.length
+    };
+}
+
+
+
+// utils/counters/increaseCounter.js
+
+import { run } from "../../database/query.js";
+
+export async function increaseCounter(db, tableName, prefix, length = 3) {
+
+    await run(
+        db,
+        `
+        INSERT INTO COUNTERS
+        (
+            table_name,
+            prefix,
+            current,
+            length
+        )
+        VALUES
+        (
+            ?,
+            ?,
+            1,
+            ?
+        )
+        ON CONFLICT(table_name, prefix)
+        DO UPDATE SET
+            current = current + 1
+        `,
+        [tableName, prefix, length]
+    );
+}
+
+
+
+// utils/permission/checkPermission.js
+
+export function checkDepartment(user, departmentId) {
+    if (!user) {
+        return false;
+    }
+
+    return user.department_id === departmentId;
+}
+
+export function checkGroup(user, group) {
+    if (!user || !Array.isArray(group)) {
+        return false;
+    }
+
+    return group.includes(user.role_id);
+}
+
+export function checkRole(user, role) {
+    if (!user) {
+        return false;
+    }
+
+    return user.role_id === role;
+}
+
+
+
+// utils\validators\dataValidator.js
+
+
+
+
+export { isValidDate } from "./dateValidator.js";
+
+export { isValidEmail } from "./emailValidator.js";
+
+export { isValidPassword } from "./passwordValidator.js";
+
+export { isValidPhone } from "./phoneValidator.js";
+
+export { validateRequest } from "./validateRequest.js";
+
+
+
+// src/utils/matchRoute.js
+
+/**
+ * Kiểm tra request có đúng HTTP method và route hay không.
+ *
+ * @param {Request} request
+ * @param {string} method
+ * @param {string} root
+ * @param {string} path
+ *
+ * @returns {boolean}
+ *
+ * Ví dụ:
+ * matchRoute(
+ *     request,
+ *     "POST",
+ *     "/api/auth",
+ *     "/login"
+ * );
+ */
+export function matchRoute(
+    ctx,
+    method,
+    root,
+    path
+) {
+    const url = new URL(ctx.request.url);
+
+    const requestMethod =
+        ctx.request.method.toUpperCase();
+
+    const requestPath =
+        normalizePath(url.pathname);
+
+    const expectedMethod =
+        method.toUpperCase();
+
+    const expectedRoute =
+        normalizePath(
+            `${root}${path}`
+        );
+
+    if (
+        requestMethod !== expectedMethod
+    ) {
+        return false;
+    }
+
+    const routeParts =
+        expectedRoute
+            .split("/")
+            .filter(Boolean);
+
+    const requestParts =
+        requestPath
+            .split("/")
+            .filter(Boolean);
+
+    if (
+        routeParts.length !==
+        requestParts.length
+    ) {
+        return false;
+    }
+
+    const params = {};
+
+    const matched =
+        routeParts.every(
+            (part, index) => {
+
+                const requestPart =
+                    requestParts[index];
+
+                if (
+                    part.startsWith(":")
+                ) {
+                    const paramName =
+                        part.slice(1);
+
+                    params[paramName] =
+                        decodeURIComponent(
+                            requestPart
+                        );
+
+                    return true;
+                }
+
+                return (
+                    part === requestPart
+                );
+            }
+        );
+
+    if (matched) {
+        ctx.params = params;
+    }
+
+    return matched;
+}
+
+
+/**
+ * Chuẩn hóa path.
+ *
+ * Ví dụ:
+ * "/api/auth/" -> "/api/auth"
+ * "api/auth"   -> "/api/auth"
+ * "login"      -> "/login"
+ * "/login/"    -> "/login"
+ * ""           -> ""
+ *
+ * @param {string} path
+ *
+ * @returns {string}
+ */
+function normalizePath(path) {
+    if (!path) {
+        return "";
+    }
+
+    let normalized =
+        String(path)
+            .trim()
+            .replace(/\/+/g, "/");
+
+    if (
+        !normalized.startsWith("/")
+    ) {
+        normalized =
+            `/${normalized}`;
+    }
+
+    if (
+        normalized.length > 1 &&
+        normalized.endsWith("/")
+    ) {
+        normalized =
+            normalized.slice(0, -1);
+    }
+
+    return normalized;
+}
+
+
+
+// ./index.js
+
+import { createContext } from "./app/context.js";
+
+import { router } from "./app/router.js";
+
+import { getBody } from "./utils/getBody.js";
+
+import { getQuery } from "./utils/getQuery.js";
+
+import { getParams } from "./utils/getParams.js";
+
+import { authMiddleware } from "./middlewares/authMiddleware.js";
+
+import { errorMiddleware } from "./middlewares/errorMiddleware.js";
+
+const PUBLIC_PREFIXES = [
+
+    "/api/auth/login",
+    "/api/auth/verifyToken",
+    "/api/public"
+];
+
+export default {
+
+    async fetch(
+        request,
+        env
+    ) {
+
+        try {
+
+            const ctx =
+                createContext(
+                    request,
+                    env
+                );
+
+            const url =
+                new URL(
+                    request.url
+                );
+
+            const path =
+                url.pathname;
+
+            ctx.body =
+                await getBody(
+                    request
+                );
+
+            ctx.query =
+                getQuery(url);
+
+            ctx.params =
+                getParams(path);
+
+            const isPublic =
+                PUBLIC_PREFIXES
+                .some(prefix =>
+                    path.startsWith(
+                        prefix
+                    )
+                );
+
+            if (
+                !isPublic
+            ) {
+
+                await authMiddleware(
+                    ctx
+                );
+            }
+
+            return await router(
+                ctx
+            );
+
+        } catch (error) {
+
+            return errorMiddleware(
+                error
+            );
+        }
+    }
+};
+
+
+
+# LUỒNG DỮ HOẠT ĐỘNG
+
+Request
+↓
+index.js
+↓
+createContext()
+↓
+getBody()
+↓
+getQuery()
+↓
+getParams()
+↓
+Public/Auth Route ?
+↓
+YES → Router
+NO
+↓
+AuthMiddleware
+↓
+Validate JWT
+↓
+Decode JWT
+↓
+ctx.user
+↓
+Router
+↓
+Module Router
+↓
+Validation
+↓
+Service
+↓
+Repository
+↓
+D1
+↓
+Response
+
+# KIẾN TRÚC HỆ THỐNG
+
+├───app
+├───database
+├───middlewares
+├───modules
+│ ├───auth
+│ │ ├───models
+│ │ ├───repositories
+│ │ ├───requests
+│ │ ├───responses
+│ │ ├───routers
+│ │ ├───services
+│ │ └───validations
+│ ├───departments
+│ │ ├───models
+│ │ ├───repositories
+│ │ ├───requests
+│ │ ├───responses
+│ │ ├───routers
+│ │ ├───services
+│ │ └───validations
+│ ├───events
+│ │ ├───models
+│ │ ├───repositories
+│ │ ├───requests
+│ │ ├───responses
+│ │ ├───routers
+│ │ ├───services
+│ │ └───validations
+│ ├───eventStatus
+│ │ ├───models
+│ │ ├───repositories
+│ │ ├───requests
+│ │ ├───responses
+│ │ ├───routers
+│ │ ├───services
+│ │ └───validations
+│ ├───eventTypes
+│ │ ├───models
+│ │ ├───repositories
+│ │ ├───requests
+│ │ ├───responses
+│ │ ├───routers
+│ │ ├───services
+│ │ └───validations
+│ ├───faculties
+│ │ ├───models
+│ │ ├───repositories
+│ │ ├───requests
+│ │ ├───responses
+│ │ ├───routers
+│ │ ├───services
+│ │ └───validations
+│ ├───generations
+│ │ ├───models
+│ │ ├───repositories
+│ │ ├───requests
+│ │ ├───responses
+│ │ ├───routers
+│ │ ├───services
+│ │ └───validations
+│ ├───mistakes
+│ │ ├───models
+│ │ ├───repositories
+│ │ ├───requests
+│ │ ├───responses
+│ │ ├───routers
+│ │ ├───services
+│ │ └───validations
+│ ├───roles
+│ │ ├───models
+│ │ ├───repositories
+│ │ ├───requests
+│ │ ├───responses
+│ │ ├───routers
+│ │ ├───services
+│ │ └───validations
+│ ├───schoolYears
+│ │ ├───models
+│ │ ├───repositories
+│ │ ├───requests
+│ │ ├───responses
+│ │ ├───routers
+│ │ ├───services
+│ │ └───validations
+│ └───users
+│ ├───models
+│ ├───repositories
+│ ├───requests
+
+│ ├───routers
+│ ├───services
+│ └───validations
+├───repositories
+├───shared
+│ ├───constants
+│ ├───enums
+│ ├───errors
+│ └───responses
+└───utils
+├───tokens
+└───validators
+
+
+
+
+tổng quan
+
+
+
+biết rằng với mỗi moudle mà tôi yêu cầu code cần phải tuân thủ có các lớp repositories, requests (nếu có), routers, services, validations, models (nếu cần).
+
+Bây giờ chỉ cần đọc + hiểu + nhớ kiến trúc hệ thống trong hội thoại này và chưa cần thực hiện gì thêm
+
+
+
+#-----------------------------------
+
+Tham khảo code mẫu:
+
+// modules/mistakes/repositories/createMistakeRepository.js
+
+import { run } from "../../../database/query.js";
+
+export class createMistakeRepository {
+
+    constructor(db) {
+        this.db = db;
+    }
+
+    async createMistake(
+        mistakeId,
+        mistakeName,
+        level,
+        isActive,
+        createdBy
+    ) {
+
+        await run(
+            this.db,
+            `
+            INSERT INTO MISTAKES
+            (
+                mistake_id,
+                mistake_name,
+                level,
+                is_active,
+                created_by,
+                updated_by
+            )
+            VALUES
+            (
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?
+            )
+            `,
+            [
+                mistakeId,
+                mistakeName,
+                level,
+                isActive,
+                createdBy,
+                createdBy
+            ]
+        );
+    }
+}
+
+// modules/mistakes/repositories/deleteMistakeRepository.js
+
+import { run } from "../../../database/query.js";
+
+export class deleteMistakeRepository {
+
+    constructor(db) {
+        this.db = db;
+    }
+
+    async deleteMistake(mistakeId) {
+
+        await run(
+            this.db,
+            `
+            DELETE FROM MISTAKES
+            WHERE mistake_id = ?
+            `,
+            [mistakeId]
+        );
+    }
+}
+
+// modules/mistakes/repositories/getMistakeActiveRepository.js
+
+import { all } from "../../../database/query.js";
+
+export class getMistakeActiveRepository {
+
+    constructor(db) {
+        this.db = db;
+    }
+
+    async getMistakeActive() {
+
+        return await all(
+            this.db,
+            `
+            SELECT
+                mistake_id,
+                mistake_name,
+                level
+            FROM MISTAKES
+            WHERE is_active = 1
+            ORDER BY mistake_id DESC
+            `
+        );
+    }
+}
+
+// modules/mistakes/repositories/getMistakeByIdRepository.js
+
+import { first } from "../../../database/query.js";
+
+export class getMistakeByIdRepository {
+
+    constructor(db) {
+        this.db = db;
+    }
+
+    async findById(mistakeId) {
+
+        return await first(
+            this.db,
+            `
+            SELECT
+                mistake_id,
+                mistake_name,
+                level,
+                is_active,
+                created_at,
+                created_by,
+                updated_at,
+                updated_by
+            FROM MISTAKES
+            WHERE mistake_id = ?
+            `,
+            [mistakeId]
+        );
+    }
+}
+
+// modules/mistakes/repositories/getMistakeListCountRepository.js
+
+import { first } from "../../../database/query.js";
+
+export class getMistakeListCountRepository {
+
+    constructor(db) {
+        this.db = db;
+    }
+
+    async getTotal(
+        keyword,
+        isActive
+    ) {
+
+        const result = await first(
+            this.db,
+            `
+            SELECT
+                COUNT(*) total
+            FROM MISTAKES
+            WHERE
+                (
+                    ? IS NULL
+                    OR mistake_name LIKE ?
+                )
+                AND
+                (
+                    ? IS NULL
+                    OR is_active = ?
+                )
+            `,
+            [
+                keyword,
+                keyword ? `%${keyword}%` : null,
+                isActive,
+                isActive
+            ]
+        );
+
+        return result.total;
+    }
+}
+
+// modules/mistakes/repositories/getMistakeListRepository.js
+
+import { all } from "../../../database/query.js";
+
+export class getMistakeListRepository {
+
+    constructor(db) {
+        this.db = db;
+    }
+
+    async getMistakeList(
+        keyword,
+        isActive,
+        limit,
+        offset
+    ) {
+
+        return await all(
+            this.db,
+            `
+            SELECT
+                mistake_id,
+                mistake_name,
+                level,
+                is_active,
+                created_at,
+                created_by,
+                updated_at,
+                updated_by
+            FROM MISTAKES
+            WHERE
+                (
+                    ? IS NULL
+                    OR mistake_name LIKE ?
+                )
+                AND
+                (
+                    ? IS NULL
+                    OR is_active = ?
+                )
+            ORDER BY mistake_id DESC
+            LIMIT ?
+            OFFSET ?
+            `,
+            [
+                keyword,
+                keyword ? `%${keyword}%` : null,
+                isActive,
+                isActive,
+                limit,
+                offset
+            ]
+        );
+    }
+}
+
+// modules/mistakes/repositories/updateMistakeRepository.js
+
+import { run } from "../../../database/query.js";
+
+export class updateMistakeRepository {
+
+    constructor(db) {
+        this.db = db;
+    }
+
+    async updateMistake(
+        mistakeId,
+        mistakeName,
+        level,
+        isActive,
+        updatedBy
+    ) {
+
+        await run(
+            this.db,
+            `
+            UPDATE MISTAKES
+            SET
+                mistake_name = ?,
+                level = ?,
+                is_active = ?,
+                updated_by = ?,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE mistake_id = ?
+            `,
+            [
+                mistakeName,
+                level,
+                isActive,
+                updatedBy,
+                mistakeId
+            ]
+        );
+    }
+}
+
+// modules/mistakes/requests/CreateMistakeRequest.js
+
+export const CreateMistakeRequest = {
+
+    mistake_name: {
+        required: true,
+        type: "string",
+        maxLength: 255
+    },
+
+    level: {
+        required: true,
+        type: "number"
+    },
+
+    is_active: {
+        required: true,
+        type: "number"
+    }
+};
+
+// modules/mistakes/mistakeRouter.js
+
+import { matchRoute } from "../../../utils/matchRoute.js";
+import { apiResponse } from "../../../shared/responses/apiResponse.js";
+
+import { getMistakeListValidation } from "../validations/getMistakeListValidation.js";
+import { createMistakeValidation } from "../validations/createMistakeValidation.js";
+import { updateMistakeValidation } from "../validations/updateMistakeValidation.js";
+import { getMistakeByIdValidation } from "../validations/getMistakeByIdValidation.js";
+import { deleteMistakeValidation } from "../validations/deleteMistakeValidation.js";
+
+import { getMistakeListService } from "../services/getMistakeListService.js";
+import { getMistakeActiveService } from "../services/getMistakeActiveService.js";
+import { createMistakeService } from "../services/createMistakeService.js";
+import { updateMistakeService } from "../services/updateMistakeService.js";
+import { getMistakeByIdService } from "../services/getMistakeByIdService.js";
+import { deleteMistakeService } from "../services/deleteMistakeService.js";
+
+export async function mistakeRouter(ctx) {
+    if (matchRoute(ctx, "GET", "/api/mistakes", "/list")) {
+        getMistakeListValidation(ctx.query);
+
+        const data = await getMistakeListService(ctx);
+
+        return apiResponse({
+            success: true,
+            message: "Get mistake list successfully",
+            data
+        });
+    }
+
+    if (matchRoute(ctx, "GET", "/api/mistakes", "/active")) {
+        const data = await getMistakeActiveService(ctx);
+
+        return apiResponse({
+            success: true,
+            message: "Get active mistakes successfully",
+            data
+        });
+    }
+
+    if (matchRoute(ctx, "GET", "/api/mistakes", "/:mistake_id")) {
+        getMistakeByIdValidation(ctx.params);
+
+        const data = await getMistakeByIdService(ctx);
+
+        return apiResponse({
+            success: true,
+            message: "Get mistake successfully",
+            data
+        });
+    }
+
+    if (matchRoute(ctx, "POST", "/api/mistakes", "/create")) {
+        createMistakeValidation(ctx.body);
+
+        const data = await createMistakeService(ctx);
+
+        return apiResponse({
+            success: true,
+            message: "Create mistake successfully",
+            data
+        });
+    }
+
+    if (matchRoute(ctx, "PUT", "/api/mistakes", "/update")) {
+        updateMistakeValidation(ctx.body);
+
+        const data = await updateMistakeService(ctx);
+
+        return apiResponse({
+            success: true,
+            message: "Update mistake successfully",
+            data
+        });
+    }
+
+    if (matchRoute(ctx, "DELETE", "/api/mistakes", "/:mistake_id")) {
+        deleteMistakeValidation(ctx.params);
+
+        const data = await deleteMistakeService(ctx);
+
+        return apiResponse({
+            success: true,
+            message: "Delete mistake successfully",
+            data
+        });
+    }
+
+    return Response.json(
+        {
+            success: false,
+            message: "Route not found"
+        },
+        {
+            status: 404
+        }
+    );
+}
+
+// modules/mistakes/services/createMistakeService.js
+
+import { ForbiddenError } from "../../../shared/errors/ForbiddenError.js";
+import { ROLE } from "../../../shared/constants/permission.js";
+
+import { checkRole } from "../../../utils/permission/checkPermission.js";
+import { getNextCounter } from "../../../utils/counters/getNextCounter.js";
+import { increaseCounter } from "../../../utils/counters/increaseCounter.js";
+
+import { createMistakeRepository } from "../repositories/createMistakeRepository.js";
+
+const PREFIX_KEY = "MIS"
+
+export async function createMistakeService(ctx) {
+
+    if (!checkRole(ctx.user, ROLE.CAPTAIN)) {
+        throw new ForbiddenError("Permission denied");
+    }
+
+    const {
+        mistake_name,
+        level,
+        is_active
+    } = ctx.body;
+
+    const counter = await getNextCounter(
+        ctx.bindings.db,
+        "MISTAKES",
+        PREFIX_KEY
+    );
+
+    const mistakeId = counter.code;
+
+    const repository =
+        new createMistakeRepository(
+            ctx.bindings.db
+        );
+
+    await repository.createMistake(
+        mistakeId,
+        mistake_name,
+        level,
+        is_active,
+        ctx.user.user_id
+    );
+
+    await increaseCounter(
+        ctx.bindings.db,
+        "MISTAKES",
+        PREFIX_KEY
+    );
+
+    return {
+        mistake_id: mistakeId,
+        mistake_name,
+        level,
+        is_active
+    };
+}
+
+// modules/mistakes/services/deleteMistakeService.js
+
+import { ForbiddenError } from "../../../shared/errors/ForbiddenError.js";
+import { ConflictError } from "../../../shared/errors/ConflictError.js";
+import { NotFoundError } from "../../../shared/errors/NotFoundError.js";
+
+import { ROLE } from "../../../shared/constants/permission.js";
+import { checkRole } from "../../../utils/permission/checkPermission.js";
+
+import { foreignKeyReferences } from "../../../database/query.js";
+
+import { getMistakeByIdRepository } from "../repositories/getMistakeByIdRepository.js";
+import { deleteMistakeRepository } from "../repositories/deleteMistakeRepository.js";
+
+export async function deleteMistakeService(ctx) {
+
+    if (!checkRole(ctx.user, ROLE.CAPTAIN)) {
+        throw new ForbiddenError("Permission denied");
+    }
+
+    const mistakeId =
+        ctx.params.mistake_id;
+
+    const findRepository =
+        new getMistakeByIdRepository(
+            ctx.bindings.db
+        );
+
+    const mistake =
+        await findRepository.findById(
+            mistakeId
+        );
+
+    if (!mistake) {
+        throw new NotFoundError(
+            "Mistake not found"
+        );
+    }
+
+    const references =
+        await foreignKeyReferences(
+            ctx.bindings.db,
+            "MISTAKES",
+            "mistake_id",
+            mistakeId
+        );
+
+    if (references.length > 0) {
+
+        throw new ConflictError(
+            "Cannot delete mistake because it is referenced by another record"
+        );
+    }
+
+    const repository =
+        new deleteMistakeRepository(
+            ctx.bindings.db
+        );
+
+    await repository.deleteMistake(
+        mistakeId
+    );
+
+    return {
+        mistake_id: mistakeId
+    };
+}
+
+// modules/mistakes/services/getMistakeActiveService.js
+
+import { getMistakeActiveRepository } from "../repositories/getMistakeActiveRepository.js";
+
+export async function getMistakeActiveService(ctx) {
+
+    const repository =
+        new getMistakeActiveRepository(
+            ctx.bindings.db
+        );
+
+    return await repository.getMistakeActive();
+}
+
+// modules/mistakes/services/getMistakeByIdService.js
+
+import { ForbiddenError } from "../../../shared/errors/ForbiddenError.js";
+import { ROLE } from "../../../shared/constants/permission.js";
+
+import { checkRole } from "../../../utils/permission/checkPermission.js";
+
+import { NotFoundError } from "../../../shared/errors/NotFoundError.js";
+
+import { getMistakeByIdRepository } from "../repositories/getMistakeByIdRepository.js";
+
+export async function getMistakeByIdService(ctx) {
+
+    if (!checkRole(ctx.user, ROLE.CAPTAIN)) {
+        throw new ForbiddenError("Permission denied");
+    }
+
+    const mistakeId =
+        ctx.params.mistake_id;
+
+    const repository =
+        new getMistakeByIdRepository(
+            ctx.bindings.db
+        );
+
+    const mistake =
+        await repository.findById(
+            mistakeId
+        );
+
+    if (!mistake) {
+        throw new NotFoundError(
+            "Mistake not found"
+        );
+    }
+
+    return mistake;
+}
+
+// modules/mistakes/services/getMistakeListService.js
+
+import { ForbiddenError } from "../../../shared/errors/ForbiddenError.js";
+import { ROLE } from "../../../shared/constants/permission.js";
+
+import { checkRole } from "../../../utils/permission/checkPermission.js";
+
+import { getMistakeListRepository } from "../repositories/getMistakeListRepository.js";
+import { getMistakeListCountRepository } from "../repositories/getMistakeListCountRepository.js";
+
+export async function getMistakeListService(ctx) {
+
+    if (!checkRole(ctx.user, ROLE.CAPTAIN)) {
+        throw new ForbiddenError("Permission denied");
+    }
+
+    const page = Number(
+        ctx.query.page || 1
+    );
+
+    const pageSize = Number(
+        ctx.query.page_size || 20
+    );
+
+    const keyword =
+        ctx.query.keyword?.trim() || null;
+
+    const isActive =
+        ctx.query.is_active === undefined ||
+        ctx.query.is_active === ""
+            ? null
+            : Number(ctx.query.is_active);
+
+    const offset =
+        (page - 1) * pageSize;
+
+    const listRepository =
+        new getMistakeListRepository(
+            ctx.bindings.db
+        );
+
+    const countRepository =
+        new getMistakeListCountRepository(
+            ctx.bindings.db
+        );
+
+    const items =
+        await listRepository.getMistakeList(
+            keyword,
+            isActive,
+            pageSize,
+            offset
+        );
+
+    const total =
+        await countRepository.getTotal(
+            keyword,
+            isActive
+        );
+
+    return {
+        items,
+        pagination: {
+            page,
+            page_size: pageSize,
+            total,
+            total_pages:
+                Math.ceil(
+                    total / pageSize
+                )
+        }
+    };
+}
+
+// modules/mistakes/services/updateMistakeService.js
+
+import { ForbiddenError } from "../../../shared/errors/ForbiddenError.js";
+import { ROLE } from "../../../shared/constants/permission.js";
+
+import { checkRole } from "../../../utils/permission/checkPermission.js";
+
+import { NotFoundError } from "../../../shared/errors/NotFoundError.js";
+
+import { getMistakeByIdRepository } from "../repositories/getMistakeByIdRepository.js";
+import { updateMistakeRepository } from "../repositories/updateMistakeRepository.js";
+
+export async function updateMistakeService(ctx) {
+
+    if (!checkRole(ctx.user, ROLE.CAPTAIN)) {
+        throw new ForbiddenError("Permission denied");
+    }
+
+    const {
+        mistake_id,
+        mistake_name,
+        level,
+        is_active
+    } = ctx.body;
+
+    const findRepository =
+        new getMistakeByIdRepository(
+            ctx.bindings.db
+        );
+
+    const mistake =
+        await findRepository.findById(
+            mistake_id
+        );
+
+    if (!mistake) {
+        throw new NotFoundError(
+            "Mistake not found"
+        );
+    }
+
+    const repository =
+        new updateMistakeRepository(
+            ctx.bindings.db
+        );
+
+    await repository.updateMistake(
+        mistake_id,
+        mistake_name,
+        level,
+        is_active,
+        ctx.user.user_id
+    );
+
+    return {
+        mistake_id,
+        mistake_name,
+        level,
+        is_active
+    };
+}
+
+// utils/tokens/createToken.js
+
+import { SignJWT } from "jose";
+
+function getSecret(secret) {
+
+    if (!secret) {
+        throw new Error("JWT secret is required");
+    }
+
+    return new TextEncoder().encode(secret);
+}
+
+/**
+ * Tạo JWT Access Token
+ *
+ * @param {Object} payload
+ * @param {String} secret
+ * @param {String} expiresIn
+ *
+ * @returns {Promise<String>}
+ */
+export async function createToken(
+    payload,
+    secret,
+    expiresIn = "4h"
+) {
+
+    if (!payload) {
+        throw new Error("Payload is required");
+    }
+
+    const token = await new SignJWT(payload)
+        .setProtectedHeader({
+            alg: "HS256",
+            typ: "JWT"
+        })
+        .setIssuedAt()
+        .setExpirationTime(expiresIn)
+        .sign(getSecret(secret));
+
+    return token;
+}
+
+// utils/tokens/decodeToken.js
+
+/**
+ * Decode JWT payload.
+ *
+ * Lưu ý:
+ * Hàm này không xác thực chữ ký.
+ *
+ * @param {string} token
+ * @returns {Object|null}
+ */
+export function decodeToken(token) {
+    try {
+        if (!token) {
+            return null;
+        }
+
+        const parts = token.split(".");
+
+        if (parts.length !== 3) {
+            return null;
+        }
+
+        const payload = parts[1];
+
+        const base64 = payload
+            .replace(/-/g, "+")
+            .replace(/_/g, "/");
+
+        const padded = base64.padEnd(
+            base64.length + (4 - base64.length % 4) % 4,
+            "="
+        );
+
+        const decoded = atob(padded);
+
+        return JSON.parse(decoded);
+    } catch {
+        return null;
+    }
+}
+
+Tuân thủ nghiêm ngặt các nguyên tắc sau:
+- API tuân thủ nghiêm ngặt theo restAPI
+- Phân quyền theo đúng yêu cầu của tôi
+- Danh sách active trả về danh sách ko cần phân trang
+- Các danh sách còn lại, bộ lọc, tìm kím cần phải phân trang
+- Xoá dữ liệu phải đảm bảo rằng ko có bất kì liên kết khoá nào đến nó
+- Các chuỗi hành động liên tiếp cần phải có transaction
+- Các id tự tăng phải thực hiện theo đúng mẫu và tái sử dụng code có sẵn
+- Kiểm tra nghiêm ngặt dữ liệu đầu vào đảm bảo các trường bắt buộc, các trường không
+- Các trường dữ liệu gửi dư so với resquest dto ko sử dụng đến
+- Dữ liệu cập nhật chỉ cập nhật các trường dữ liệu gửi lên, các trường không liên quan ko cập nhật
+
+Thực hiện nghiên cứu code và các yêu cầu của tôi chưa thực hiện gì thêm

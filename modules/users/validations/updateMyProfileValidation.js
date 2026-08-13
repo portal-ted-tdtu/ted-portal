@@ -1,0 +1,36 @@
+// modules/users/validations/updateMyProfileValidation.js
+
+import { ValidationError } from "../../../shared/errors/ValidationError.js";
+import { UpdateMyProfileRequest } from "../requests/UpdateMyProfileRequest.js";
+
+export function updateMyProfileValidation(body) {
+    const errors = [];
+
+    for (const [field, rule] of Object.entries(UpdateMyProfileRequest)) {
+        if (!Object.prototype.hasOwnProperty.call(body || {}, field)) continue;
+
+        const value = body[field];
+
+        if (value === null) continue;
+
+        if (rule.type === "string" && typeof value !== "string") {
+            errors.push({ field, message: `${field} must be a string` });
+        }
+
+        if (rule.type === "number" && (typeof value !== "number" || Number.isNaN(value))) {
+            errors.push({ field, message: `${field} must be a number` });
+        }
+
+        if (rule.maxLength && typeof value === "string" && value.length > rule.maxLength) {
+            errors.push({ field, message: `${field} must not exceed ${rule.maxLength} characters` });
+        }
+    }
+
+    if (body?.sex !== undefined && body?.sex !== null && ![0, 1].includes(body.sex)) {
+        errors.push({ field: "sex", message: "sex must be 0 or 1" });
+    }
+
+    if (errors.length > 0) throw new ValidationError("Validation failed", errors);
+
+    return true;
+}

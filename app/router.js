@@ -1,8 +1,6 @@
 // ./app/router.js
 
 import { authRouter } from "../modules/auth/routers/authRouter.js";
-// import { userRouter } from "../modules/users/routers/userRouter.js";
-// import { eventRouter } from "../modules/events/routers/eventRouter.js";
 
 import { departmentRouter } from "../modules/departments/routers/departmentRouter.js";
 import { eventStatusRouter } from "../modules/eventStatus/routers/eventStatusRouter.js";
@@ -14,20 +12,14 @@ import { mistakeRouter } from "../modules/mistakes/routers/mistakeRouter.js";
 import { roleRouter } from "../modules/roles/routers/roleRouter.js";
 import { schoolYearRouter } from "../modules/schoolYears/routers/schoolYearRouter.js";
 
+import { userRouter } from "../modules/users/routers/userRouter.js";
+// import { eventRouter } from "../modules/events/routers/eventRouter.js";
 
 const ROUTES = [
     {
         prefix: "/api/auth",
         handler: authRouter
     },
-    // {
-    //     prefix: "/api/users",
-    //     handler: userRouter
-    // },
-    // {
-    //     prefix: "/api/events",
-    //     handler: eventRouter
-    // },
     {
         prefix: "/api/departments",
         handler: departmentRouter
@@ -60,6 +52,15 @@ const ROUTES = [
         prefix: "/api/school-years",
         handler: schoolYearRouter
     },
+
+     {
+        prefix: "/api/users",
+        handler: userRouter
+    },
+    // {
+    //     prefix: "/api/events",
+    //     handler: eventRouter
+    // },
 ];
 
 export async function router(ctx) {
