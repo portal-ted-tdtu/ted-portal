@@ -2,7 +2,7 @@
 
 import { ForbiddenError } from "../../../shared/errors/ForbiddenError.js";
 import { ConflictError } from "../../../shared/errors/ConflictError.js";
-import { ROLE, ROLE_GROUP, DEPARTMENT } from "../../../shared/constants/permission.js";
+import { ROLE, ROLE_GROUP, DEPARTMENT } from "../../../shared/constants/role.js";
 import { checkGroup, checkDepartment } from "../../../utils/permission/checkPermission.js";
 import { first } from "../../../database/query.js";
 import { createUserRepository } from "../repositories/createUserRepository.js";

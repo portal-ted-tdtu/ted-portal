@@ -1,6 +1,6 @@
 // modules/schoolYears/services/createSchoolYearService.js
 
-import { ROLE } from "../../../shared/constants/permission.js";
+import { ROLE } from "../../../shared/constants/role.js";
 import { ForbiddenError } from "../../../shared/errors/ForbiddenError.js";
 
 import { checkRole } from "../../../utils/permission/checkPermission.js";

@@ -4,7 +4,7 @@ import { ForbiddenError } from "../../../shared/errors/ForbiddenError.js";
 import { ConflictError } from "../../../shared/errors/ConflictError.js";
 import { NotFoundError } from "../../../shared/errors/NotFoundError.js";
 
-import { ROLE } from "../../../shared/constants/permission.js";
+import { ROLE } from "../../../shared/constants/role.js";
 import { checkRole } from "../../../utils/permission/checkPermission.js";
 
 import { foreignKeyReferences } from "../../../database/query.js";

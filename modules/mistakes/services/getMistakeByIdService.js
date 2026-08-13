@@ -1,7 +1,7 @@
 // modules/mistakes/services/getMistakeByIdService.js
 
 import { ForbiddenError } from "../../../shared/errors/ForbiddenError.js";
-import { ROLE } from "../../../shared/constants/permission.js";
+import { ROLE } from "../../../shared/constants/role.js";
 
 import { checkRole } from "../../../utils/permission/checkPermission.js";
 

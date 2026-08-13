@@ -2,7 +2,7 @@
 
 import { ForbiddenError } from "../../../shared/errors/ForbiddenError.js";
 import { NotFoundError } from "../../../shared/errors/NotFoundError.js";
-import { ROLE_GROUP, DEPARTMENT } from "../../../shared/constants/permission.js";
+import { ROLE_GROUP, DEPARTMENT } from "../../../shared/constants/role.js";
 import { checkGroup, checkDepartment } from "../../../utils/permission/checkPermission.js";
 import { getUserByIdRepository } from "../repositories/getUserByIdRepository.js";
 import { updateUserRepository } from "../repositories/updateUserRepository.js";

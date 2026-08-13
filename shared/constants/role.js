@@ -1,4 +1,4 @@
-// shared/constants/permission.js
+// shared/constants/role.js
 
 export const ROLE = {
     ADMIN: "ADMIN",

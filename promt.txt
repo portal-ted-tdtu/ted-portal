@@ -109,7 +109,7 @@ export const SYSTEM = {
 
 
 
-// shared/constants/permission.js
+// shared/constants/role.js
 
 export const ROLE = {
     ADMIN: "ADMIN",
@@ -1235,7 +1235,7 @@ export async function mistakeRouter(ctx) {
 // modules/mistakes/services/createMistakeService.js
 
 import { ForbiddenError } from "../../../shared/errors/ForbiddenError.js";
-import { ROLE } from "../../../shared/constants/permission.js";
+import { ROLE } from "../../../shared/constants/role.js";
 
 import { checkRole } from "../../../utils/permission/checkPermission.js";
 import { getNextCounter } from "../../../utils/counters/getNextCounter.js";
@@ -1298,7 +1298,7 @@ import { ForbiddenError } from "../../../shared/errors/ForbiddenError.js";
 import { ConflictError } from "../../../shared/errors/ConflictError.js";
 import { NotFoundError } from "../../../shared/errors/NotFoundError.js";
 
-import { ROLE } from "../../../shared/constants/permission.js";
+import { ROLE } from "../../../shared/constants/role.js";
 import { checkRole } from "../../../utils/permission/checkPermission.js";
 
 import { foreignKeyReferences } from "../../../database/query.js";
@@ -1377,7 +1377,7 @@ export async function getMistakeActiveService(ctx) {
 // modules/mistakes/services/getMistakeByIdService.js
 
 import { ForbiddenError } from "../../../shared/errors/ForbiddenError.js";
-import { ROLE } from "../../../shared/constants/permission.js";
+import { ROLE } from "../../../shared/constants/role.js";
 
 import { checkRole } from "../../../utils/permission/checkPermission.js";
 
@@ -1416,7 +1416,7 @@ export async function getMistakeByIdService(ctx) {
 // modules/mistakes/services/getMistakeListService.js
 
 import { ForbiddenError } from "../../../shared/errors/ForbiddenError.js";
-import { ROLE } from "../../../shared/constants/permission.js";
+import { ROLE } from "../../../shared/constants/role.js";
 
 import { checkRole } from "../../../utils/permission/checkPermission.js";
 
@@ -1490,7 +1490,7 @@ export async function getMistakeListService(ctx) {
 // modules/mistakes/services/updateMistakeService.js
 
 import { ForbiddenError } from "../../../shared/errors/ForbiddenError.js";
-import { ROLE } from "../../../shared/constants/permission.js";
+import { ROLE } from "../../../shared/constants/role.js";
 
 import { checkRole } from "../../../utils/permission/checkPermission.js";
 

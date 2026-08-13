@@ -1,7 +1,7 @@
 // modules/mistakes/services/createMistakeService.js
 
 import { ForbiddenError } from "../../../shared/errors/ForbiddenError.js";
-import { ROLE } from "../../../shared/constants/permission.js";
+import { ROLE } from "../../../shared/constants/role.js";
 
 import { checkRole } from "../../../utils/permission/checkPermission.js";
 import { getNextCounter } from "../../../utils/counters/getNextCounter.js";

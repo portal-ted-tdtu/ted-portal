@@ -1,7 +1,7 @@
 import { ForbiddenError } from "../../../shared/errors/ForbiddenError.js";
 import { NotFoundError } from "../../../shared/errors/NotFoundError.js";
 
-import { ROLE_GROUP, DEPARTMENT } from "../../../shared/constants/permission.js";
+import { ROLE_GROUP, DEPARTMENT } from "../../../shared/constants/role.js";
 
 import { checkDepartment, checkGroup } from "../../../utils/permission/checkPermission.js";
 

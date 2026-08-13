@@ -1,5 +1,5 @@
 import { ForbiddenError } from "../../../shared/errors/ForbiddenError.js";
-import { ROLE } from "../../../shared/constants/permission.js";
+import { ROLE } from "../../../shared/constants/role.js";
 import { checkRole } from "../../../utils/permission/checkPermission.js";
 import { getDepartmentListRepository } from "../repositories/getDepartmentListRepository.js";
 import { getDepartmentListCountRepository } from "../repositories/getDepartmentListCountRepository.js";

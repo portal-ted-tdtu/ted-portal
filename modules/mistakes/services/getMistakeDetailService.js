@@ -3,7 +3,7 @@
 import { ForbiddenError } from "../../../shared/errors/ForbiddenError.js";
 import { NotFoundError } from "../../../shared/errors/NotFoundError.js";
 
-import { ROLE } from "../../../shared/constants/permission.js";
+import { ROLE } from "../../../shared/constants/role.js";
 import { checkRole } from "../../../utils/permission/checkPermission.js";
 
 import { getMistakeDetailRepository } from "../repositories/getMistakeDetailRepository.js";
