@@ -29,7 +29,7 @@ export async function authRouter(ctx) {
     }
 
     // Kiểm tra token
-    if (matchRoute(ctx, "GET", "/api/auth", "/validate-token")) {
+    if (matchRoute(ctx, "GET", "/api/auth", "/verify-token")) {
         const data = await validateTokenService(ctx);
 
         return apiResponse({
